@@ -24,7 +24,7 @@ format:
 
 
 # What is Psychology 
-The scientific study of behavior and the mind is known as psychology.In simple words, it explains how the human brain works and why It behaves in such a particular way.
+The scientific study of behavior and the mind is known as psychology. In simple words, it explains how the human brain works and why it behaves in such a particular way.
 
 # Question of interest?
 Our main aim is to find out the factors leading to psychological issues like depression (mainly focusing on the Age and Gender of that person) and it is important to figure out those factors as depression strongly effects human's life.
@@ -54,7 +54,9 @@ library('ggplot2')
 
 ## Reading Dataset
 ```{r}
-df <- read_csv('/Users/yaminipriyankakandikattu/Downloads/b_depressed.csv')
+
+url <- 'https://raw.githubusercontent.com/Charan-AB/Data-science-in-psychology/main/b_depressed.csv'
+df <- readr::read_csv(url)
 head(df)
 ```
 
@@ -110,7 +112,7 @@ ggplot(data = df, mapping = aes(x = total_members, y = incoming_agricultural)) +
 
 # The number of people in the family doesn't relate that much to the agricultural income of their family
 ```
-The number of people in the family doesn't relate that much to the agricultural income of their family.
+The Agricultural income of a family does not depend upon the number of people in that family.
 
 ```{r}
 Depression <- as.character(df$depressed)
@@ -121,26 +123,27 @@ ggplot(df, aes(x = factor(total_members), y = living_expenses, fill =Depression,
 
 ```
 
-We can kind of say that as we have more number of records related to non depressed people, we can see that living expenses are being higher in their case (as its sums up more numbers). By intuiting we can say that in most of the cases depressed people are spending lavishly (per person calculation) as they don't plan proper spending on expenditures.
+As we have more records related to non-depressed people, we can see that living expenses are higher in their case (as its sums up more numbers). By intuiting, we can say that in most cases depressed people are spending lavishly (per person calculation) as they don't plan to spend on expenditures.
 
 ```{r}
 ggplot(df,aes(x=Age,y=living_expenses,col=Depression))+geom_point()
 options(scipen=999)
 ```
 
-One thing we can analyse from the graph is that for lower age values most of them are lesser living expenses and as age increases - most people of that age group are having higher living expenses.
+
+One thing we can analyze from the graph is that younger people have fewer living expenses and, as age increases, living expenses increase.
 
 ```{r}
 boxplot(df$education_level ~ Depression, col = c("#FFE0B2", "#c57B00"))
 ```
 
-Just seeing how education level values are distributes across two categories of our 'depressed' column. 
+In the above plot, we could see how education level values are distributed across two categories of our 'depressed' column. 
 
-Interestingly, People who are depressed and those who are not are having the same mean(nearly). 
+Interestingly, People who are depressed and those who are not depressed have the same mean(nearly). 
 
-People of non depressed category have varying educational levels from 0 till 15+ that's why you can see some outliers on either sides and also almost most of them are having education levels from 7-10
+People in the non-depressed category have varying educational levels from 0 to 15 + that's why you can see some outliers on either side. Also almost most of them have education levels from 7-10
 
-People of depressed category are mostly having education levels around 6-10 with mean close to 9 and only very few outliers on the right.
+People in the depressed category moslty have education levels around 6-10 with mean close to 9 and only very few outliers on the right.
 
 ```{r}
 hist(df$incoming_agricultural, prob = TRUE)                              
@@ -170,7 +173,7 @@ legend("topright", labels,
 
 ```
 
-Just seeing how the number of childrens column is distributed - most families (around 71%) are having from 0-3 children with 1 and 2 children being occurred in most of the cases.
+In the above plot, we could see how the number of childrens column is distributed - most families (around 71%) are having from 0-3 children with 1 and 2 children being occurred in most of the cases.
 
 
 
@@ -185,7 +188,8 @@ df_financial <- df[c(9,12,14,21,23)]
 corrplot(cor(df_pesronal), method = "number", type = "upper")
 corrplot(cor(df_financial), method = "number", type = "upper")
 ```
-we can say that Age has the highest correlation with 'depressed' column but as our target label is categorical its better to see the relationship in an other way than just looking at the correlation values.looking at how different variables (Age and Gender) are having an effect on the target label
+Age has the highest correlation with the 'depressed' column, but as our target label is categorical, it is better to see the relationship in another way than just looking at the correlation values. 
+Plot shows how different variables (Age and Gender) affect the target label.
 
 ```{r}
 t <- df %>% select(depressed, Age) %>% group_by(Age) %>% summarise(count = n(), 
@@ -193,34 +197,33 @@ t <- df %>% select(depressed, Age) %>% group_by(Age) %>% summarise(count = n(),
 #t$avg_age == 0.25
 t[order(t$avg_depression, decreasing = TRUE),]
 ```
-epressed people are slightly of more age - of all the age values which have an average depression greater than 0.25 (24 different age groups) the second least age group is 39 (i.e., 23 out of the top 24 cases have age greater than 39)
+Depressed people are slightly of more age. Of all the age values which have an average depression greater than 0.25 (24 different age groups), the second least age group is 39 (i.e., 23 out of the top 24 cases have age greater than 39)
 
-Interesting thing - the remaining 1 age group left above in the top 24 groups is that of Age 17 which is the minimum age value in this data set.
+Interesting thing - the remaining 1 age group left in the top 24 groups is Age 17, which is the minimum age value in this data set.
 
 ```{r}
 df %>% ggplot(aes(x = sex, y = Age, color = depressed)) +
   geom_point()
 ```
 
-In male(category value 0) we can see that depressed people are spread across the whole age groups
-and coming to the females, you can mostly see that after an age of 60 they are being more depressed comparitively
+In males (category value 0), we can see that depressed people are distributed across the whole age group. In females, people belonging to the age group of 60 and more are more depressed comparatively.
 
 ```{r}
 df %>% select(sex, depressed) %>% group_by(sex,depressed) %>% summarise(count = n())
 ```
 
-out of the 115 males in the dataset 20 of them are depressed (around 17%)
-out of the 1294 females in the dataset 215 of them are depressed (around 16%)
+Out of 115 males in the dataset, 20 of them are depressed (around 17%).
+Out of the 1294 females in the dataset, 215 of them are depressed (around 16%)
 
-More records of female but from the data we are having we can say that Gender doesn't have that much effect on whether the person is depressed or not.
+Though there are more records of females, but from our analysis we could say that Gender doesn't have much effect on whether the person is depressed or not.
 
 # Conclusion
 
-After performing some analysis on the How the Age and Gender columns are going to affect the depression, we can conclude that - 
+After performing some analysis on whether and how the age and gender columns are going to affect depression, we can conclude that - 
 
-1) More Age groups tend to have more chances of being depressed(escpecially for females) - positive correlation although people of very young age also have quite a fair amount of chance of getting more into the depression kind of activities.
+1) People belonging to higher age groups tend to have more chances of being depressed(especially for females). However, a significant number of very young people have the potential to become more involved in these types of activities.We could observe a positive correlation overall.
 
-2) Gender doesn't have a strong impact on the depression.
+2) Gender doesn't have a strong impact on depression.
 
 ## Any possible Sources of bias in the data set?
 
@@ -231,10 +234,10 @@ df %>% count(incoming_salary)
 df %>% count(depressed)
 ```
 
-We can see that in all the 4 columns listed above one category is completely dominating the other in terms of the number of times it has occurred.
-Most of the data is that of females, married, those who don't have any fixed income(salary) and mainly in the dependent column 'depressed' - it has only 15% of records which give us information about depressed people. 
+We can see that in all 4 columns listed above, one category completely dominates the other in terms of the number of times it has occurred.
+Most of the data is that of females, married, and those who don't have any fixed income (salary), and mainly in the dependent column "depressed"—it has only 15% of records that give us information about depressed people.
 
-So, we can say that this dataset is not a true sample i.e., not a true represntation of the whole population and it does have bias in it.
+So, we can say that this dataset is not a true sample, i.e., not a true representation of the whole population, and it does have a bias in it.
 
 
 # GitHub Link
